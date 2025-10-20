@@ -15,57 +15,45 @@ public class GildedRose
 
     public void UpdateQuality()
     {
-        for (var i = 0; i < Items.Count; i++)
+        foreach (Item item in Items)
         {
-             //convert name of item to lowercase to see if contains certain word using in condition
-            string name = Items[i].Name;
+            //convert name of item to lowercase to see if contains certain word using in condition
+            string name = item.Name;
             name = name.ToLower();
-
-            if (Items[i].Quality > 0 && Items[i].Quality < 50)
+            if (item.Quality >= 0 && item.Quality < 50)
             {
-                int qualityRemove = Items[i].SellIn < 0 ? 2 : 1;
-
-                if (name.Contains("conjured"))
+                int qualityRemove = item.SellIn < 0 ? 2 : 1;
+                switch (name)
                 {
-                    Items[i].Quality = Items[i].Quality - qualityRemove * 2;
-                }
-                else
-                {
-                    if (!name.Contains("aged brie") && !name.Contains("backstage passes"))
-                    {
+                    case var _ when name.Contains("conjured"):
+                        item.Quality = item.Quality - qualityRemove * 2;
+                        break;
+                    case var _ when !name.Contains("aged brie") && !name.Contains("backstage passes"):
                         if (!name.Contains("sulfuras"))
                         {
-                            Items[i].Quality = Items[i].Quality - qualityRemove;
+                            item.Quality = item.Quality - qualityRemove;
                         }
-                    }
-                    else
-                    {
-                        AddQuality(name, Items[i]);
-                    }
+                        break;
+                    default:
+                        AddQuality(name, item);
+                        break;
                 }
+            item.Quality = Math.Clamp(item.Quality, 0, 50);
             }
-            else if(Items[i].Quality == 0)
-            {
-                if (name.Contains("aged brie") || name.Contains("backstage passes"))AddQuality(name, Items[i]);                
-            }
-
-            Items[i].Quality = Math.Clamp(Items[i].Quality, 0, 50);
 
             if (!name.Contains("sulfuras"))
             {
-                Items[i].SellIn = Items[i].SellIn - 1;
+                item.SellIn = item.SellIn - 1;
 
-                if (Items[i].SellIn < 0 && name.Contains("backstage passes"))
+                if (item.SellIn < 0 && name.Contains("backstage passes"))
                 {
-                    Items[i].Quality = 0;
+                    item.Quality = 0;
                 }
             }
         }
     }
     private void AddQuality(string name, Item item)
     {
-        if (item.SellIn > 0)
-        {
             int qualityAdd = 1;
 
             if (name.Contains("backstage passes"))
@@ -79,7 +67,6 @@ public class GildedRose
                     qualityAdd = 3;
                 }
             }
-            item.Quality += qualityAdd;
-        }
+            item.Quality += qualityAdd;        
     }
 }
