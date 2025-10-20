@@ -26,7 +26,7 @@ public class GildedRose
                 switch (name)
                 {
                     case var _ when name.Contains("conjured"):
-                        item.Quality -= qualityRemove * 2;
+                        DecreaseQuality(name, item, qualityRemove * 2);
                         break;
                     case var _ when name.Contains("aged brie") || name.Contains("backstage passes"):
                         if (!name.Contains("sulfuras"))
@@ -35,12 +35,11 @@ public class GildedRose
                         }
                         break;
                     default:
-                        item.Quality -= qualityRemove;
+                        DecreaseQuality(name, item, qualityRemove);
                         break;
                 }
                 item.Quality = Math.Clamp(item.Quality, 0, 50);
             }
-            
             DecreaseSellIn(name, item);
         }
     }
@@ -61,9 +60,16 @@ public class GildedRose
         }
         item.Quality += qualityAdd;
     }
+    private void DecreaseQuality(string name, Item item, int quantity)
+    {
+        if (!name.Contains("sulfuras"))
+        {
+            item.Quality -= quantity;
+        }
+    }
     private void DecreaseSellIn(string name, Item item)
     {
-         if (!name.Contains("sulfuras"))
+           if (!name.Contains("sulfuras"))
             {
                 item.SellIn = item.SellIn - 1;
 
