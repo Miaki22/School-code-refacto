@@ -55,7 +55,7 @@ public class GildedRose
             {
                 Items[i].SellIn = Items[i].SellIn - 1;
 
-                if (Items[i].SellIn < 0 && (name.Contains("aged brie") || name.Contains("backstage passes")))
+                if (Items[i].SellIn < 0 && name.Contains("backstage passes"))
                 {
                     Items[i].Quality = 0;
                 }
