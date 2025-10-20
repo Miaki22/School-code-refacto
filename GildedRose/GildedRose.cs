@@ -28,14 +28,14 @@ public class GildedRose
                     case var _ when name.Contains("conjured"):
                         item.Quality = item.Quality - qualityRemove * 2;
                         break;
-                    case var _ when !name.Contains("aged brie") && !name.Contains("backstage passes"):
+                    case var _ when name.Contains("aged brie") || name.Contains("backstage passes"):
                         if (!name.Contains("sulfuras"))
-                        {
-                            item.Quality = item.Quality - qualityRemove;
+                        {                            
+                            AddQuality(name, item);
                         }
                         break;
                     default:
-                        AddQuality(name, item);
+                        item.Quality = item.Quality - qualityRemove;
                         break;
                 }
             item.Quality = Math.Clamp(item.Quality, 0, 50);
