@@ -26,22 +26,44 @@ public class GildedRose
                 switch (name)
                 {
                     case var _ when name.Contains("conjured"):
-                        item.Quality = item.Quality - qualityRemove * 2;
+                        item.Quality -= qualityRemove * 2;
                         break;
                     case var _ when name.Contains("aged brie") || name.Contains("backstage passes"):
                         if (!name.Contains("sulfuras"))
-                        {                            
+                        {
                             AddQuality(name, item);
                         }
                         break;
                     default:
-                        item.Quality = item.Quality - qualityRemove;
+                        item.Quality -= qualityRemove;
                         break;
                 }
-            item.Quality = Math.Clamp(item.Quality, 0, 50);
+                item.Quality = Math.Clamp(item.Quality, 0, 50);
             }
+            
+            DecreaseSellIn(name, item);
+        }
+    }
+    private void AddQuality(string name, Item item)
+    {
+        int qualityAdd = 1;
 
-            if (!name.Contains("sulfuras"))
+        if (name.Contains("backstage passes"))
+        {
+            if (item.SellIn < 11)
+            {
+                qualityAdd = 2;
+            }
+            if (item.SellIn < 6)
+            {
+                qualityAdd = 3;
+            }
+        }
+        item.Quality += qualityAdd;
+    }
+    private void DecreaseSellIn(string name, Item item)
+    {
+         if (!name.Contains("sulfuras"))
             {
                 item.SellIn = item.SellIn - 1;
 
@@ -50,23 +72,5 @@ public class GildedRose
                     item.Quality = 0;
                 }
             }
-        }
-    }
-    private void AddQuality(string name, Item item)
-    {
-            int qualityAdd = 1;
-
-            if (name.Contains("backstage passes"))
-            {
-                if (item.SellIn < 11)
-                {
-                    qualityAdd = 2;
-                }
-                if (item.SellIn < 6)
-                {
-                    qualityAdd = 3;
-                }
-            }
-            item.Quality += qualityAdd;        
     }
 }
